@@ -7,11 +7,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLytKategoriAd"
-        android:layout_width="230dp"
+        android:layout_width="244dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        app:boxBackgroundMode="outline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -19,7 +19,7 @@
             android:id="@+id/editTxtKategoriAd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Kategori Adı:"
+            android:hint="Kategori Adı"
             android:inputType="text|textAutoComplete"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>

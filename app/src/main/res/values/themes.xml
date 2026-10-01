@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.FilmlerApplication_Ornek" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/statusbar</item>
+        <item name="android:colorPrimary">@color/primaryColor</item>
     </style>
 
     <style name="Theme.FilmlerApplication_Ornek" parent="Base.Theme.FilmlerApplication_Ornek" />

@@ -2,6 +2,8 @@
 <resources>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="background">#D3D3D3</color>
     <color name="statusbar">#12278A</color>
-    <color name="appbarColor">#7D8DEA</color>
+    <color name="appbarColor">#6177D5</color>
+    <color name="primaryColor">#3F51B5</color>
 </resources>

@@ -1,11 +1,13 @@
 package per.example.filmlerapplication_ornek;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.squareup.picasso.Picasso;
 
 public class FilmDetayActivity extends AppCompatActivity {
     ImageView imgFilmResim;
@@ -29,7 +31,12 @@ public class FilmDetayActivity extends AppCompatActivity {
         txtFilmAd.setText(film.getFilm_Ad());
         txtFilmYonetmen.setText("Yönetmen: " + film.getYonetmen_id().getYonetmen_Ad());
         txtFilmYil.setText(String.valueOf(film.getFilm_Yil()));
-        imgFilmResim.setImageResource(getResources().getIdentifier(film.getFilm_Resim(), "drawable", getPackageName()));
+
+        // imgFilmResim.setImageResource(getResources().getIdentifier(film.getFilm_Resim(), "drawable", getPackageName()));
+
+        //** Picasso kütüphanesiyle dinamik şekilde online veritabanından resim yükleme yöntemi.
+        String url = "https://restfuldb.onatsomer.com/webservices-site/images/" + film.getFilm_Resim();
+        Picasso.get().load(url).resize(800,1080).into(imgFilmResim);
 
         if (TextUtils.isEmpty(txtFilmAciklama.toString())) {
             txtFilmAciklama.setText("Film Özeti Bulunamadı!");

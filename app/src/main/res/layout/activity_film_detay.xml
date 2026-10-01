@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".FilmDetayActivity">
 
     <ImageView
         android:id="@+id/imgDetayResim"
         android:layout_width="wrap_content"
-        android:layout_height="270dp"
+        android:layout_height="308dp"
         android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -27,7 +28,6 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgDetayResim" />
 
@@ -36,11 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Inception"
+        android:text="Yönetmen:"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/txtFilmAciklama"
         app:layout_constraintTop_toBottomOf="@+id/txtFilmAciklama" />
 
     <TextView
@@ -50,10 +50,8 @@
         android:layout_marginTop="8dp"
         android:text="Lorem ipsum odor amet, consectetuer adipiscing elit. Mus malesuada semper sollicitudin posuere lacus cubilia sagittis porta etiam. Vivamus adipiscing conubia per cubilia penatibus. Nisl aliquet neque hac nunc et cubilia orci porta. Dui in et dapibus sem convallis nascetur integer eros. Volutpat nulla justo luctus ullamcorper cubilia. Nullam felis lacus lectus; parturient maecenas purus. Blandit primis facilisi eget eros aptent sed morbi. Velit leo dui senectus tristique porttitor."
         android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
@@ -63,7 +61,7 @@
         android:layout_marginTop="8dp"
         android:text="2009"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,8 +71,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:text="Özeti"
+        android:layout_marginTop="16dp"
+        android:text="Konusu:"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"

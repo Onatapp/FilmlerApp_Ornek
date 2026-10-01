@@ -1,19 +1,20 @@
 package per.example.filmlerapplication_ornek;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,9 +27,9 @@ public class FilmlerAdapter extends RecyclerView.Adapter<FilmlerAdapter.filmCard
         this.filmlerList = filmlerList;
     }
 
-    public class filmCardTasarimTutucu extends RecyclerView.ViewHolder{
+    public class filmCardTasarimTutucu extends RecyclerView.ViewHolder {
         CardView cardView_Film;
-        ImageView imgFilmResim;
+        ImageView imgFilmResim, btn_CrudMenu;
         TextView txtFilmBaslik;
 
         public filmCardTasarimTutucu(@NonNull View itemView) {
@@ -36,23 +37,30 @@ public class FilmlerAdapter extends RecyclerView.Adapter<FilmlerAdapter.filmCard
             cardView_Film = itemView.findViewById(R.id.cardView_Film);
             imgFilmResim = itemView.findViewById(R.id.imgFilmResim);
             txtFilmBaslik = itemView.findViewById(R.id.txtFilmBaslik);
+            btn_CrudMenu = itemView.findViewById(R.id.btn_CrudMenu);
         }
     }
 
     @NonNull
     @Override
     public filmCardTasarimTutucu onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.filmler_card, parent, false);
         return new filmCardTasarimTutucu(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull filmCardTasarimTutucu holder, int position) {
-        final Filmler film = filmlerList.get(position);
 
+        final Filmler film = filmlerList.get(position);
         holder.txtFilmBaslik.setText(film.getFilm_Ad());
 
-        holder.imgFilmResim.setImageResource(context.getResources().getIdentifier(film.getFilm_Resim(), "drawable", context.getPackageName()));
+        //** Statik olarak veritabanından uygulamaya resim yüklemek için bir yöntem.
+        // holder.imgFilmResim.setImageResource(context.getResources().getIdentifier(film.getFilm_Resim(), "drawable", context.getPackageName()));
+
+        //** Picasso kütüphanesiyle dinamik olarak online veritabanından resim yükleme yöntemi.
+        String url = "https://restfuldb.onatsomer.com/webservices-site/images/" + film.getFilm_Resim();
+        Picasso.get().load(url).resize(800,1080).into(holder.imgFilmResim);
 
         holder.cardView_Film.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +71,30 @@ public class FilmlerAdapter extends RecyclerView.Adapter<FilmlerAdapter.filmCard
                 context.startActivity(intent);
             }
         });
+
+        /**
+         * Film güncelleme ve silme için Popup Menu
+         */
+        /* holder.btn_CrudMenu.setOnClickListener(view -> {
+
+            PopupMenu popupMenu = new PopupMenu(context, holder.btn_CrudMenu);
+            popupMenu.getMenuInflater().inflate(R.menu.crud_popup_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    if (item.getItemId() == R.id.action_movieUpdate){
+
+                    } else if (item.getItemId() == R.id.action_movieDelete) {
+
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        });
+        **/
     }
 
     @Override
