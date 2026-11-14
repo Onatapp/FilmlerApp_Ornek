@@ -1,4 +1,4 @@
-package per.example.filmlerapplication_ornek;
+package per.example.filmlerapplication_ornek.sqlitedb;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

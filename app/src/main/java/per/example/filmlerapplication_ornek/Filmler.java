@@ -1,27 +1,46 @@
 package per.example.filmlerapplication_ornek;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Filmler implements Serializable {
+    @SerializedName("film_id")
+    @Expose
     private int film_id;
-    private String film_Ad;
-    private int film_Yil;
-    private String film_Resim;
-    private String film_Aciklama;
-    private Kategoriler kategori_id;
-    private Yonetmenler yonetmen_id;
+    @SerializedName("film_ad")
+    @Expose
+    private String film_ad;
+    @SerializedName("film_yil")
+    @Expose
+    private int film_yil;
+    @SerializedName("film_resim")
+    @Expose
+    private String film_resim;
+    @SerializedName("film_aciklama")
+    @Expose
+    private String film_aciklama;
+    @SerializedName("kategoriler")
+    @Expose
+    private Kategoriler kategori;
+    @SerializedName("yonetmenler")
+    @Expose
+    private Yonetmenler yonetmen;
 
     public Filmler() {
     }
 
-    public Filmler(int film_id, String film_Ad, int film_Yil, String film_Resim, String film_Aciklama, Kategoriler kategori_id, Yonetmenler yonetmen_id) {
-        this.film_id = film_id;
-        this.film_Ad = film_Ad;
-        this.film_Yil = film_Yil;
-        this.film_Resim = film_Resim;
-        this.film_Aciklama = film_Aciklama;
-        this.kategori_id = kategori_id;
-        this.yonetmen_id = yonetmen_id;
+    public Filmler(int filmId, String filmAd, int filmYil, String filmResim,
+                   String filmAciklama, Kategoriler kategori, Yonetmenler yonetmen) {
+        super();
+        this.film_id = filmId;
+        this.film_ad = filmAd;
+        this.film_yil = filmYil;
+        this.film_resim = filmResim;
+        this.film_aciklama = filmAciklama;
+        this.kategori = kategori;
+        this.yonetmen = yonetmen;
     }
 
     public int getFilm_id() {
@@ -33,50 +52,50 @@ public class Filmler implements Serializable {
     }
 
     public String getFilm_Ad() {
-        return film_Ad;
+        return film_ad;
     }
 
     public void setFilm_Ad(String film_Ad) {
-        this.film_Ad = film_Ad;
+        this.film_ad = film_Ad;
     }
 
-    public int getFilm_Yil() {
-        return film_Yil;
+    public int getFilmYil() {
+        return film_yil;
     }
 
-    public void setFilm_Yil(int film_Yil) {
-        this.film_Yil = film_Yil;
+    public void setFilmYil(int filmYil) {
+        this.film_yil = filmYil;
     }
 
-    public String getFilm_Resim() {
-        return film_Resim;
+    public String getFilmResim() {
+        return film_resim;
     }
 
-    public void setFilm_Resim(String film_Resim) {
-        this.film_Resim = film_Resim;
+    public void setFilmResim(String filmResim) {
+        this.film_resim = filmResim;
     }
 
-    public String getFilm_Aciklama() {
-        return film_Aciklama;
+    public String getFilmAciklama() {
+        return film_aciklama;
     }
 
-    public void setFilm_Aciklama(String film_Aciklama) {
-        this.film_Aciklama = film_Aciklama;
+    public void setFilmAciklama(String filmAciklama) {
+        this.film_aciklama = filmAciklama;
     }
 
-    public Kategoriler getKategori_id() {
-        return kategori_id;
+    public Kategoriler getKategori() {
+        return kategori;
     }
 
-    public void setKategori_id(Kategoriler kategori_id) {
-        this.kategori_id = kategori_id;
+    public void setKategori(Kategoriler kategori) {
+        this.kategori = kategori;
     }
 
-    public Yonetmenler getYonetmen_id() {
-        return yonetmen_id;
+    public Yonetmenler getYonetmen() {
+        return yonetmen;
     }
 
-    public void setYonetmen_id(Yonetmenler yonetmen_id) {
-        this.yonetmen_id = yonetmen_id;
+    public void setYonetmen(Yonetmenler yonetmen) {
+        this.yonetmen = yonetmen;
     }
 }

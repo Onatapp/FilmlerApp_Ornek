@@ -1,4 +1,4 @@
-package per.example.filmlerapplication_ornek;
+package per.example.filmlerapplication_ornek.sqlitedb;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

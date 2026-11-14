@@ -1,9 +1,13 @@
-package per.example.filmlerapplication_ornek;
+package per.example.filmlerapplication_ornek.sqlitedb;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+
+import per.example.filmlerapplication_ornek.Filmler;
+import per.example.filmlerapplication_ornek.Kategoriler;
+import per.example.filmlerapplication_ornek.Yonetmenler;
 
 public class FilmlerDao {
 

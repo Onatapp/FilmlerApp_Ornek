@@ -2,15 +2,14 @@ package per.example.filmlerapplication_ornek;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,21 +58,25 @@ public class FilmlerAdapter extends RecyclerView.Adapter<FilmlerAdapter.filmCard
         // holder.imgFilmResim.setImageResource(context.getResources().getIdentifier(film.getFilm_Resim(), "drawable", context.getPackageName()));
 
         //** Picasso kütüphanesiyle dinamik olarak online veritabanından resim yükleme yöntemi.
-        String url = "https://restfuldb.onatsomer.com/webservices-site/images/" + film.getFilm_Resim();
-        Picasso.get().load(url).resize(800,1080).into(holder.imgFilmResim);
+        String url = "https://restfuldb.onatsomer.com/webservices-site/images/" + film.getFilmResim();
+        Picasso.get().load(url).resize(800, 1080).into(holder.imgFilmResim);
 
         holder.cardView_Film.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Log.e("DEBUG ERROR 1", "Yönetmen boş mu? - " + (film.getYonetmen() == null));
+                Log.e("DEBUG ERROR 2", "Kategori boş mu? - " + (film.getKategori() == null));
+
                 Intent intent = new Intent(context, FilmDetayActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("filmBilgi", film);
                 context.startActivity(intent);
             }
         });
 
         /**
-         * Film güncelleme ve silme için Popup Menu
+         * Film güncelleme ve silme için Popup Menu - ÖRNEK ŞABLON OLARAK
          */
         /* holder.btn_CrudMenu.setOnClickListener(view -> {
 

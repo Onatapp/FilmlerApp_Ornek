@@ -1,6 +1,7 @@
 package per.example.filmlerapplication_ornek;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,16 +30,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import per.example.filmlerapplication_ornek.databinding.ActivityFilmlerBinding;
+import per.example.filmlerapplication_ornek.retrofit.ApiUtils;
+import per.example.filmlerapplication_ornek.retrofit.CrudCevap;
+import per.example.filmlerapplication_ornek.retrofit.FilmCevap;
+import per.example.filmlerapplication_ornek.retrofit.FilmlerInterface;
+import per.example.filmlerapplication_ornek.retrofit.KategorilerInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class FilmlerActivity extends AppCompatActivity {
-
     ArrayList<Filmler> filmlerArrayList;
     FilmlerAdapter adapter;
     Kategoriler kategori;
     private ActivityFilmlerBinding bind;
+    private FilmlerInterface filmlerInterface;
+    private KategorilerInterface kategorilerInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +57,11 @@ public class FilmlerActivity extends AppCompatActivity {
         setContentView(bind.getRoot());
 
         // dbc = new DBConnection(this);
+        filmlerInterface = ApiUtils.getFilmlerInterface();
 
         kategori = (Kategoriler) getIntent().getSerializableExtra("kategoriNesne");
 
-        bind.toolbar2.setTitle(kategori.getKategori_Ad() + " Filmleri");
+        bind.toolbar2.setTitle(kategori.getKategori_ad() + " Filmleri");
         setSupportActionBar(bind.toolbar2);
 
         bind.filmlerRv.setHasFixedSize(true);
@@ -62,14 +73,95 @@ public class FilmlerActivity extends AppCompatActivity {
         filmlerArrayList = new ArrayList<>();
         adapter = new FilmlerAdapter(this, filmlerArrayList);
         bind.filmlerRv.setAdapter(adapter);
-        filmGetir(kategori.getKategori_id());
+
+        moviesListRetrofit(kategori.getKategori_id());
+    }
+
+    /**
+     * Kategori Adapter'dan taşınan kategori_id'ye göre WEB SERVİS isteği ile filmleri LİSTELEME - RETROFIT kullanarak
+     *
+     * @param kategori_ID
+     */
+    void moviesListRetrofit(int kategori_ID) {
+
+        try {
+            filmlerInterface.filmlerByKategoriId(kategori_ID).enqueue(new Callback<FilmCevap>() {
+                @Override
+                public void onResponse(Call<FilmCevap> call, @NonNull retrofit2.Response<FilmCevap> response) {
+
+                    List<Filmler> movies = response.body().getFilmler();
+                    adapter = new FilmlerAdapter(getApplicationContext(), movies);
+                    bind.filmlerRv.setAdapter(adapter);
+                }
+
+                @Override
+                public void onFailure(Call<FilmCevap> call, Throwable t) {
+
+                    Toast.makeText(getApplicationContext(), "HATA! Filmler Yüklenemedi #1010", Toast.LENGTH_LONG).show();
+                    Log.e("#1010 Film Yükleme Hatası", t.getMessage().toString());
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("Retrofit - Filmler Yüklenemedi!", "#1010 | " + e.getMessage().toString());
+        }
+    }
+
+    void kategoriUpdateRetrofit() {
+        /*
+        BURADA SORUN VAR: Başarılı çalışıyor ancak DB'de değiştirilen kategori güncellenmiyor.
+         */
+
+        kategorilerInterface = ApiUtils.getKategorilerInterface();
+
+        try {
+            View v = getLayoutInflater().inflate(R.layout.alert_view_design, null);
+            TextInputEditText editKategoriAd = v.findViewById(R.id.editTxtKategoriAd);
+
+            AlertDialog.Builder ad = new AlertDialog.Builder(this);
+            ad.setTitle("Kategori Güncelleme - " + kategori.getKategori_ad());
+            ad.setMessage("Kategori ID: " + kategori.kategori_id);
+            ad.setView(v);
+            editKategoriAd.setText(kategori.kategori_ad);
+            String kategoriAd = editKategoriAd.getText().toString().trim();
+
+            ad.setPositiveButton("Kaydet", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    kategorilerInterface.kategoriGuncelle(kategori.getKategori_id(), kategoriAd).enqueue(new Callback<CrudCevap>() {
+                        @Override
+                        public void onResponse(Call<CrudCevap> call, retrofit2.Response<CrudCevap> response) {
+
+                            startActivity(new Intent(FilmlerActivity.this, MainActivity.class));
+                            finish();
+                            Toast.makeText(FilmlerActivity.this, "Kategori Başarıyla Güncellendi.", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<CrudCevap> call, Throwable t) {
+                            Log.e("Retrofit Güncelleme İsteği", "Kategori güncelleme isteğinde hata oldu! #1012 - " + t.getMessage().toString());
+                        }
+                    });
+                }
+            });
+            ad.setNegativeButton("Vazgeç", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            }).show();
+
+        } catch (Exception e) {
+            Log.e("Kategori Güncelleme HATA", "Retrofit ile güncellerken hata oldu! #1011 - " + e.getMessage().toString());
+        }
     }
 
     /**
      * Kategori Adapter'dan taşınan kategori_ID'ye göre WEB SERVİS isteğiyle filmleri LİSTELEME. - VOLLEY kullanarak
+     *
      * @param kategoriID
      */
-    public void filmGetir(int kategoriID) {
+    public void filmGetirVolley(int kategoriID) {
 
         String url = "https://restfuldb.onatsomer.com/filmler";
 
@@ -139,12 +231,12 @@ public class FilmlerActivity extends AppCompatActivity {
 
     /**
      * VOLLEY ile kategori GÜNCELLEME işlemi
+     *
      * @param kategoriID
      */
     void kategoriGuncelle(int kategoriID) {
 
         try {
-
             View v = getLayoutInflater().inflate(R.layout.alert_view_design, null);
             TextInputLayout inputLytKategoriAd = v.findViewById(R.id.inputLytKategoriAd);
             TextInputEditText editTxtKategoriAd = v.findViewById(R.id.editTxtKategoriAd);
@@ -171,7 +263,7 @@ public class FilmlerActivity extends AppCompatActivity {
                             public void onResponse(String response) {
 
                                 Log.e("GELEN CEVAP - UPDATE", response);
-                               // startActivity(new Intent(FilmlerActivity.this, MainActivity.class));
+                                // startActivity(new Intent(FilmlerActivity.this, MainActivity.class));
                                 Toast.makeText(getApplicationContext(), "Kategori başarıyla güncellendi.", Toast.LENGTH_LONG).show();
                             }
                         }, new Response.ErrorListener() {
@@ -202,7 +294,7 @@ public class FilmlerActivity extends AppCompatActivity {
             }).show();
             //ALTERNATİF : ad.create().show();
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
             Log.e("KATEGORİ GÜNCELLERKEN HATA!", e.getMessage().toString());
         }
@@ -210,6 +302,7 @@ public class FilmlerActivity extends AppCompatActivity {
 
     /**
      * VOLLEY ile kategori SİLME işlemi - AlertDialog kullanarak
+     *
      * @param kategori_ID
      */
     void kategoriSil(int kategori_ID) {
@@ -253,7 +346,7 @@ public class FilmlerActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                 Map<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<>();
 
                 return params;
             }
@@ -263,6 +356,7 @@ public class FilmlerActivity extends AppCompatActivity {
 
     /**
      * Toolbar üzerine harici MENÜ tasarımı oluşturarak içerisine inflate (import) etme.
+     *
      * @param menu
      * @return
      */
@@ -275,15 +369,16 @@ public class FilmlerActivity extends AppCompatActivity {
 
     /**
      * Toolbar üzerine yerleştirilen KATEGORİ MENÜ seçeneklerinin tıklanma olayları.
+     *
      * @param item
      * @return
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == R.id.action_categoryMultiOpt){
+        if (item.getItemId() == R.id.action_categoryMultiOpt) {
 
-            kategoriGuncelle(kategori.getKategori_id());
+            kategoriUpdateRetrofit();
 
         } else if (item.getItemId() == R.id.action_categoryDelete) {
 
@@ -291,6 +386,8 @@ public class FilmlerActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+}
+
 
     /* ---------- SQLİTE İLE GÜNCELLEME VE SİLME KULLANIMLARI ----------
         btnGuncelle.setOnClickListener(view -> {
@@ -335,4 +432,3 @@ public class FilmlerActivity extends AppCompatActivity {
                 }
             }).show();
         });  */
-}

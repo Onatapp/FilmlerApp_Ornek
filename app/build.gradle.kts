@@ -33,8 +33,16 @@ android {
 }
 
 dependencies {
+    implementation("com.squareup.okhttp3:logging-interceptor:5.5.0")
+
+    //* RETROFIT ile ilgili kütüphaneler
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.google.code.gson:gson:2.15.0")
+
+    //* VOLLEY ile ilgili kütüphaneler
     implementation("com.android.volley:volley:1.2.1")
-    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("com.squareup.picasso:picasso:2.71828") //--> PİCASSO, hem Volley hem Retrofit ile kullanılıyor
 
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("com.google.android.material:material:1.14.0")

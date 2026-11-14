@@ -1,9 +1,11 @@
-package per.example.filmlerapplication_ornek;
+package per.example.filmlerapplication_ornek.sqlitedb;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+
+import per.example.filmlerapplication_ornek.Yonetmenler;
 
 public class YonetmenDao {
 

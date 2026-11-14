@@ -2,46 +2,45 @@ package per.example.filmlerapplication_ornek;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
 
+import per.example.filmlerapplication_ornek.databinding.ActivityFilmDetayBinding;
+
 public class FilmDetayActivity extends AppCompatActivity {
-    ImageView imgFilmResim;
-    TextView txtFilmAd, txtFilmYonetmen, txtFilmYil, txtFilmAciklama;
-    Filmler film;
+    private Filmler film;
+    private ActivityFilmDetayBinding bind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_film_detay);
-
-        imgFilmResim = findViewById(R.id.imgDetayResim);
-        txtFilmAd = findViewById(R.id.txtFilmAd);
-        txtFilmYil = findViewById(R.id.txtFilmYil);
-        txtFilmYonetmen = findViewById(R.id.txtFilmYonetmen);
-        txtFilmAciklama = findViewById(R.id.txtFilmAciklama);
+        bind = ActivityFilmDetayBinding.inflate(getLayoutInflater());
+        setContentView(bind.getRoot());
 
 
         film = (Filmler) getIntent().getSerializableExtra("filmBilgi");
 
-        txtFilmAd.setText(film.getFilm_Ad());
-        txtFilmYonetmen.setText("Yönetmen: " + film.getYonetmen_id().getYonetmen_Ad());
-        txtFilmYil.setText(String.valueOf(film.getFilm_Yil()));
+        bind.txtFilmAd.setText(film.getFilm_Ad());
+        bind.txtFilmYil.setText(String.valueOf(film.getFilmYil()));
 
-        // imgFilmResim.setImageResource(getResources().getIdentifier(film.getFilm_Resim(), "drawable", getPackageName()));
-
-        //** Picasso kütüphanesiyle dinamik şekilde online veritabanından resim yükleme yöntemi.
-        String url = "https://restfuldb.onatsomer.com/webservices-site/images/" + film.getFilm_Resim();
-        Picasso.get().load(url).resize(800,1080).into(imgFilmResim);
-
-        if (TextUtils.isEmpty(txtFilmAciklama.toString())) {
-            txtFilmAciklama.setText("Film Özeti Bulunamadı!");
+        if (film.getYonetmen() != null) {
+            bind.txtFilmYonetmen.setText("Yönetmen: " + film.getYonetmen().getYonetmen_ad());
         } else {
-            txtFilmAciklama.setText(film.getFilm_Aciklama());
+            bind.txtFilmYonetmen.setText("Yönetmen: Bilinmiyor!");
+        }
+
+        //* Picasso kütüphanesiyle dinamik şekilde online veritabanından resim yükleme yöntemi.
+        String url = "https://restfuldb.onatsomer.com/webservices-site/images/" + film.getFilmResim();
+        Picasso.get().load(url).resize(800, 1080).into(bind.imgDetayResim);
+
+        if (TextUtils.isEmpty(bind.txtFilmAciklama.toString())) {
+            bind.txtFilmAciklama.setText("Film Açıklaması Bulunamadı.");
+        } else {
+            bind.txtFilmAciklama.setText(film.getFilmAciklama());
         }
     }
 }
+
+// imgFilmResim.setImageResource(getResources().getIdentifier(film.getFilm_Resim(), "drawable", getPackageName()));

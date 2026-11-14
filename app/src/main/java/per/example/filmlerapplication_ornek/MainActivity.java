@@ -31,15 +31,23 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import per.example.filmlerapplication_ornek.databinding.ActivityMainBinding;
+import per.example.filmlerapplication_ornek.retrofit.ApiUtils;
+import per.example.filmlerapplication_ornek.retrofit.KategoriCevap;
+import per.example.filmlerapplication_ornek.retrofit.KategorilerInterface;
+import per.example.filmlerapplication_ornek.sqlitedb.DatabaseCopyHelper;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Kategoriler> kategorilerArrayList;
     private ActivityMainBinding bind;
     private KategoriAdapter adapter;
+    private KategorilerInterface kategorilerInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +62,48 @@ public class MainActivity extends AppCompatActivity {
         bind.kategoriRv.setHasFixedSize(true);
         bind.kategoriRv.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
-        //** KATEGORİ LİSTESİNİ YÜKLEME
+        //** KATEGORİ LİSTESİNİ SIFIRDAN YÜKLEME
         kategorilerArrayList = new ArrayList<>();
         adapter = new KategoriAdapter(this, kategorilerArrayList);
         bind.kategoriRv.setAdapter(adapter);
-        kategoriListele();
+        categoryListRetrofit();
+    }
+
+    /**
+     * WEB SERVİS isteğiyle KATEGORİLERİ LİSTELEME - RETROFIT kullanarak
+     */
+    public void categoryListRetrofit() {
+
+        kategorilerInterface = ApiUtils.getKategorilerInterface();
+
+        try {
+            kategorilerInterface.tumKategoriler().enqueue(new Callback<KategoriCevap>() {
+                @Override
+                public void onResponse(Call<KategoriCevap> call, retrofit2.Response<KategoriCevap> response) {
+
+                    List<Kategoriler> categories = response.body().getKategoriler();
+                    adapter = new KategoriAdapter(MainActivity.this, categories);
+                    bind.kategoriRv.setAdapter(adapter);
+                }
+
+                @Override
+                public void onFailure(Call<KategoriCevap> call, Throwable t) {
+
+                    Toast.makeText(getApplicationContext(), "HATA! Kategoriler Yüklenemedi #1009", Toast.LENGTH_LONG).show();
+                    Log.e("#1009 Kategori Yükleme Hatası", t.getMessage().toString());
+                }
+            });
+
+        } catch (Exception e){
+
+            Log.e("Retrofit - Kategoriler Yüklenemedi!", "#1008 | " + e.getMessage().toString());
+        }
     }
 
     /**
      * WEB SERVİS isteğiyle KATEGORİLERİ LİSTELEME - VOLLEY kullanarak
      */
-    public void kategoriListele() {
+    public void kategoriListeleVolley() {
 
         String url = "https://restfuldb.onatsomer.com/filmler";
 
@@ -151,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
 
                         Map<String, String> params = new HashMap<>();
-                        params.put("kategori_Ad", categoryName);
+                        params.put("kategori_ad", categoryName);
                         return params;
                     }
                 };
